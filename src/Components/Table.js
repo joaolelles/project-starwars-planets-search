@@ -1,8 +1,26 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import starWarsContext from '../context/starWarsContext';
 
 function Table() {
-  const { planets } = useContext(starWarsContext);
+  const { planets, setPlanets } = useContext(starWarsContext);
+
+  useEffect(() => {
+    const fetchTablePlanets = async () => {
+      const endPoint = 'https://swapi.dev/api/planets';
+      const response = await fetch(endPoint);
+      const data = await response.json();
+      const planetsList = data.results;
+      const deleteResidents = planetsList.map((planet) => {
+        delete planet.residents;
+        return planet;
+      });
+      setPlanets(deleteResidents);
+    };
+    fetchTablePlanets();
+  }, [setPlanets]);
+
+  // Referência do delete:
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete#:~:text=The%20delete%20operator%20removes%20a,property%20is%20eventually%20released%20automatically.
 
   const planetInfos = planets;
   console.log(planetInfos);
@@ -26,20 +44,20 @@ function Table() {
         </tr>
       </thead>
       <tbody>
-        { planetInfos.map((planet, index) => (
+        {planetInfos.map((planet, index) => (
           <tr key={ index }>
-            <th>{planet.Name}</th>
-            <th>{planet.Rotation_Period}</th>
-            <th>{planet.Orbital_Period}</th>
-            <th>{planet.Diameter}</th>
-            <th>{planet.Climate}</th>
-            <th>{planet.Gravity}</th>
-            <th>{planet.Terrain}</th>
-            <th>{planet.Surface_Water}</th>
-            <th>{planet.Population}</th>
-            <th>{planet.Films}</th>
-            <th>{planet.Created}</th>
-            <th>{planet.Edited}</th>
+            <th>{planet.name}</th>
+            <th>{planet.rotation_period}</th>
+            <th>{planet.orbital_period}</th>
+            <th>{planet.diameter}</th>
+            <th>{planet.climate}</th>
+            <th>{planet.gravity}</th>
+            <th>{planet.terrain}</th>
+            <th>{planet.surface_water}</th>
+            <th>{planet.population}</th>
+            <th>{planet.films}</th>
+            <th>{planet.created}</th>
+            <th>{planet.edited}</th>
             <th>{planet.url}</th>
           </tr>
         ))}
