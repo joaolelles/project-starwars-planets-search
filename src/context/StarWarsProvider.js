@@ -5,13 +5,22 @@ import starWarsContext from './starWarsContext';
 export default function StarWarsProvider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [searchPlanet, setSearchPlanet] = useState('');
+  const [column, setColumn] = useState('population');
+  const [range, setRange] = useState('maior que');
+  const [number, setNumber] = useState(0);
 
   const value = useMemo(() => ({
     planets,
     setPlanets,
     searchPlanet,
     setSearchPlanet,
-  }), [planets, searchPlanet]);
+    column,
+    setColumn,
+    range,
+    setRange,
+    number,
+    setNumber,
+  }), [planets, searchPlanet, column, range, number]);
 
   return (
     <starWarsContext.Provider value={ value }>

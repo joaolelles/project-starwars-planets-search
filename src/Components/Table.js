@@ -3,7 +3,9 @@ import starWarsContext from '../context/starWarsContext';
 
 function Table() {
   const { setPlanets, planets,
-    searchPlanet, setSearchPlanet } = useContext(starWarsContext);
+    searchPlanet, setSearchPlanet, column, setColumn,
+    range, setRange, number, setNumber,
+  } = useContext(starWarsContext);
   useEffect(() => {
     const fetchTablePlanets = async () => {
       try {
@@ -20,30 +22,80 @@ function Table() {
         console.log(err);
       }
     };
-    // console.log(fetchTablePlanets());
     fetchTablePlanets();
   }, [setPlanets]);
 
   // Referência do delete:
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete#:~:text=The%20delete%20operator%20removes%20a,property%20is%20eventually%20released%20automatically.
 
-  // const handleFilter = () => {
-  //   const filteredPlanets = planets.filter((planet) => planet.name.toLowerCase()
-  //     .incluedes(searchPlanet.toLowerCase()));
-  //   return filteredPlanets;
-  // };
-
-  console.log(searchPlanet);
+  const handleFiltersNum = () => {
+    if (range === 'maior que') {
+      const numFilter = planets.filter(
+        (planet) => (Number(planet[column]) > Number(number)),
+      );
+      setPlanets(numFilter);
+    }
+    if (range === 'menor que') {
+      const numFilter = planets.filter(
+        (planet) => (Number(planet[column]) < Number(number)),
+      );
+      setPlanets(numFilter);
+    }
+    if (range === 'igual a') {
+      const numFilter = planets.filter(
+        (planet) => (Number(planet[column]) === Number(number)),
+      );
+      setPlanets(numFilter);
+    }
+  };
 
   return (
     <div>
-      <input
-        type="text"
-        name="search"
-        data-testid="name-filter"
-        value={ searchPlanet }
-        onChange={ (e) => setSearchPlanet(e.target.value) }
-      />
+      <form>
+        <input
+          type="text"
+          name="search"
+          data-testid="name-filter"
+          value={ searchPlanet }
+          onChange={ (e) => setSearchPlanet(e.target.value) }
+        />
+        <select
+          name="column"
+          data-testid="column-filter"
+          value={ column }
+          onChange={ (e) => setColumn(e.target.value) }
+        >
+          <option>population</option>
+          <option>orbital_period</option>
+          <option>diameter</option>
+          <option>rotation_period</option>
+          <option>surface_water</option>
+        </select>
+        <select
+          name="range"
+          data-testid="comparison-filter"
+          value={ range }
+          onChange={ (e) => setRange(e.target.value) }
+        >
+          <option>maior que</option>
+          <option>menor que</option>
+          <option>igual a</option>
+        </select>
+        <input
+          type="number"
+          name="number"
+          data-testid="value-filter"
+          value={ number }
+          onChange={ (e) => setNumber(e.target.value) }
+        />
+        <button
+          type="button"
+          data-testid="button-filter"
+          onClick={ handleFiltersNum }
+        >
+          Filtrar
+        </button>
+      </form>
       <table>
         <thead>
           <tr>
