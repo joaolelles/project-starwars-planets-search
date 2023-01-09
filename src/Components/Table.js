@@ -6,7 +6,9 @@ function Table() {
     searchPlanet, setSearchPlanet, column, setColumn,
     range, setRange, number, setNumber, filters, setFilters,
     filtersColumn, setFiltersColumn, newFilters, setNewFilters,
+    newPlanets, setNewPlanets,
   } = useContext(starWarsContext);
+
   useEffect(() => {
     const fetchTablePlanets = async () => {
       try {
@@ -18,35 +20,36 @@ function Table() {
           delete planet.residents;
           return planet;
         });
+        setNewPlanets(deleteResidents);
         setPlanets(deleteResidents);
       } catch (err) {
         console.log(err);
       }
     };
     fetchTablePlanets();
-  }, [setPlanets]);
+  }, [setNewPlanets, setPlanets]);
 
   // Referência do delete:
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete#:~:text=The%20delete%20operator%20removes%20a,property%20is%20eventually%20released%20automatically.
 
   const handleFiltersNum = () => {
     if (range === 'maior que') {
-      const numFilter = planets.filter(
+      const numFilter = newPlanets.filter(
         (planet) => (Number(planet[column]) > Number(number)),
       );
-      setPlanets(numFilter);
+      setNewPlanets(numFilter);
     }
     if (range === 'menor que') {
-      const numFilter = planets.filter(
+      const numFilter = newPlanets.filter(
         (planet) => (Number(planet[column]) < Number(number)),
       );
-      setPlanets(numFilter);
+      setNewPlanets(numFilter);
     }
     if (range === 'igual a') {
-      const numFilter = planets.filter(
+      const numFilter = newPlanets.filter(
         (planet) => (Number(planet[column]) === Number(number)),
       );
-      setPlanets(numFilter);
+      setNewPlanets(numFilter);
     }
     const object = { column, range, number };
     setFilters([...filters, object]);
@@ -54,6 +57,27 @@ function Table() {
     setFiltersColumn(noRepeatFilters);
     setColumn(noRepeatFilters[0]);
     setNewFilters([...newFilters, column]);
+  };
+
+  const deleteSingleFilter = (item) => {
+    const returnFilters = filters.filter((el) => el.column !== item);
+    const deleteFilter = newFilters.filter((del) => del !== item);
+    setNewFilters(deleteFilter);
+    setFiltersColumn([...filtersColumn, item]);
+    setFilters(returnFilters);
+    setNewPlanets(planets);
+  };
+
+  const removeAllFilters = () => {
+    setNewPlanets(planets);
+    setNewFilters([]);
+    setFiltersColumn([
+      'population',
+      'orbital_period',
+      'diameter',
+      'rotation_period',
+      'surface_water',
+    ]);
   };
 
   return (
@@ -103,13 +127,21 @@ function Table() {
         >
           Filtrar
         </button>
+        <button
+          type="button"
+          data-testid="button-remove-filters"
+          onClick={ removeAllFilters }
+        >
+          Remover todas filtragens
+        </button>
       </form>
       { newFilters.map((arg) => (
-        <p key={ arg }>
+        <p key={ arg } data-testid="filter">
           {`${arg}`}
           <button
             type="button"
             data-testid="delete-filter"
+            onClick={ () => deleteSingleFilter(arg) }
           >
             x
           </button>
@@ -134,7 +166,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {planets
+          {newPlanets
             .filter((planet) => (planet.name.toLowerCase()
               .includes(searchPlanet.toLowerCase())))
             .map((planet, index) => (

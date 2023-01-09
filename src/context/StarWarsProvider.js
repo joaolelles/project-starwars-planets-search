@@ -17,6 +17,7 @@ export default function StarWarsProvider({ children }) {
     'surface_water',
   ]);
   const [newFilters, setNewFilters] = useState([]);
+  const [newPlanets, setNewPlanets] = useState([]);
 
   const value = useMemo(() => ({
     planets,
@@ -35,9 +36,10 @@ export default function StarWarsProvider({ children }) {
     setFiltersColumn,
     newFilters,
     setNewFilters,
-
+    newPlanets,
+    setNewPlanets,
   }), [planets, searchPlanet, column, range,
-    number, filters, filtersColumn, newFilters]);
+    number, filters, filtersColumn, newFilters, newPlanets]);
 
   return (
     <starWarsContext.Provider value={ value }>
