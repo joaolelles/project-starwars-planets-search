@@ -4,7 +4,8 @@ import starWarsContext from '../context/starWarsContext';
 function Table() {
   const { setPlanets, planets,
     searchPlanet, setSearchPlanet, column, setColumn,
-    range, setRange, number, setNumber,
+    range, setRange, number, setNumber, filters, setFilters,
+    filtersColumn, setFiltersColumn, newFilters, setNewFilters,
   } = useContext(starWarsContext);
   useEffect(() => {
     const fetchTablePlanets = async () => {
@@ -47,6 +48,12 @@ function Table() {
       );
       setPlanets(numFilter);
     }
+    const object = { column, range, number };
+    setFilters([...filters, object]);
+    const noRepeatFilters = filtersColumn.filter((filter) => filter !== column);
+    setFiltersColumn(noRepeatFilters);
+    setColumn(noRepeatFilters[0]);
+    setNewFilters([...newFilters, column]);
   };
 
   return (
@@ -59,17 +66,18 @@ function Table() {
           value={ searchPlanet }
           onChange={ (e) => setSearchPlanet(e.target.value) }
         />
+        {/* <label></label> */}
         <select
           name="column"
           data-testid="column-filter"
           value={ column }
           onChange={ (e) => setColumn(e.target.value) }
         >
-          <option>population</option>
-          <option>orbital_period</option>
-          <option>diameter</option>
-          <option>rotation_period</option>
-          <option>surface_water</option>
+          {filtersColumn.map((option, index) => (
+            <option key={ index } value={ option }>
+              {option}
+            </option>
+          ))}
         </select>
         <select
           name="range"
@@ -96,6 +104,17 @@ function Table() {
           Filtrar
         </button>
       </form>
+      { newFilters.map((arg) => (
+        <p key={ arg }>
+          {`${arg}`}
+          <button
+            type="button"
+            data-testid="delete-filter"
+          >
+            x
+          </button>
+        </p>
+      ))}
       <table>
         <thead>
           <tr>

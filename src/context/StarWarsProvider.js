@@ -8,6 +8,15 @@ export default function StarWarsProvider({ children }) {
   const [column, setColumn] = useState('population');
   const [range, setRange] = useState('maior que');
   const [number, setNumber] = useState(0);
+  const [filters, setFilters] = useState([]);
+  const [filtersColumn, setFiltersColumn] = useState([
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ]);
+  const [newFilters, setNewFilters] = useState([]);
 
   const value = useMemo(() => ({
     planets,
@@ -20,7 +29,15 @@ export default function StarWarsProvider({ children }) {
     setRange,
     number,
     setNumber,
-  }), [planets, searchPlanet, column, range, number]);
+    filters,
+    setFilters,
+    filtersColumn,
+    setFiltersColumn,
+    newFilters,
+    setNewFilters,
+
+  }), [planets, searchPlanet, column, range,
+    number, filters, filtersColumn, newFilters]);
 
   return (
     <starWarsContext.Provider value={ value }>
