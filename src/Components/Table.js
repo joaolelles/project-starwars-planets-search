@@ -29,6 +29,28 @@ function Table() {
     fetchTablePlanets();
   }, [setNewPlanets, setPlanets]);
 
+  useEffect(() => {
+    filters.forEach((filter) => {
+      if (filter.range === 'maior que') {
+        const numFilter = newPlanets.filter(
+          (planet) => (Number(planet[filter.column]) > Number(filter.number)),
+        );
+        setNewPlanets(numFilter);
+      }
+      if (filter.range === 'menor que') {
+        const numFilter = newPlanets.filter(
+          (planet) => (Number(planet[filter.column]) < Number(filter.number)),
+        );
+        setNewPlanets(numFilter);
+      }
+      if (filter.range === 'igual a') {
+        const numFilter = newPlanets.filter(
+          (planet) => (Number(planet[filter.column]) === Number(filter.number)),
+        );
+        setNewPlanets(numFilter);
+      }
+    });
+  }, [filters]);
   // Referência do delete:
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete#:~:text=The%20delete%20operator%20removes%20a,property%20is%20eventually%20released%20automatically.
 
@@ -65,6 +87,7 @@ function Table() {
     setNewFilters(deleteFilter);
     setFiltersColumn([...filtersColumn, item]);
     setFilters(returnFilters);
+    // const renderPlanets = planets.filter((el) => el )
     setNewPlanets(planets);
   };
 
