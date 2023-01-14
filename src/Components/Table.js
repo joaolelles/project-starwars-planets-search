@@ -51,8 +51,6 @@ function Table() {
       }
     });
   }, [filters]);
-  // Referência do delete:
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete#:~:text=The%20delete%20operator%20removes%20a,property%20is%20eventually%20released%20automatically.
 
   const handleFiltersNum = () => {
     if (range === 'maior que') {
@@ -87,7 +85,6 @@ function Table() {
     setNewFilters(deleteFilter);
     setFiltersColumn([...filtersColumn, item]);
     setFilters(returnFilters);
-    // const renderPlanets = planets.filter((el) => el )
     setNewPlanets(planets);
   };
 
@@ -113,7 +110,6 @@ function Table() {
           value={ searchPlanet }
           onChange={ (e) => setSearchPlanet(e.target.value) }
         />
-        {/* <label></label> */}
         <select
           name="column"
           data-testid="column-filter"
