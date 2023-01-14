@@ -60,8 +60,17 @@ describe('Testando table', () => {
     userEvent.click(btnPesquisar);
     expect(planets).toBeInTheDocument();
 
-  })
-  // it('testando filtros ', () => {
+    userEvent.selectOptions(range, 'maior que');
+    userEvent.clear(numberInput);
+    userEvent.type(numberInput, '0');
+    userEvent.click(btnPesquisar);
+    expect(planets).toBeInTheDocument();
 
-  // })
+
+    const sigleRemove = screen.getAllByTestId('delete-filter')
+    userEvent.click(sigleRemove[0]);
+    userEvent.click(sigleRemove[1]);
+    const ultimoPlaneta = await screen.findByText('Endor');
+    expect(ultimoPlaneta).toBeInTheDocument();
+  })
 })
