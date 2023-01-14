@@ -43,5 +43,25 @@ describe('Testando table', () => {
     const planets = await screen.findByText('Yavin IV');
     
     expect(planets).toBeInTheDocument();
+
+    expect(planet).not.toBeInTheDocument();
+
+    const btnRemover = screen.getByTestId('button-remove-filters');
+    userEvent.click(btnRemover);
+
+    userEvent.clear(nameInput);
+    userEvent.clear(numberInput);
+
+    const planetNew = await screen.findByText('Naboo');
+    expect(planetNew).toBeInTheDocument();
+
+    userEvent.selectOptions(range, 'menor que');
+    userEvent.type(numberInput, '8000');
+    userEvent.click(btnPesquisar);
+    expect(planets).toBeInTheDocument();
+
   })
+  // it('testando filtros ', () => {
+
+  // })
 })
